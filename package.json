@@ -1,0 +1,14 @@
+{
+  "name": "t",
+  "version": "0.1.0",
+  "description": "A simple test for twitter application only authentication oAuth",
+  "main": "index.js",
+  "dependencies": {
+    "q": "~0.9.6",
+    "request": "~2.27.0"
+  },
+  "devDependencies": {},
+  "repository": "",
+  "author": "Zeuxis Lo",
+  "license": "BSD"
+}
