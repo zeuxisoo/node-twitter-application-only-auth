@@ -3,16 +3,18 @@ var request = require('request'),
 
 var BearerToken = {
 	request: function(options) {
-		var encoded_consumer_key    = encodeURIComponent(options.consumer_key),
-			encoded_consumer_secret = encodeURIComponent(options.consumer_secret),
-			encoded_bearer_token    = new Buffer(encoded_consumer_key + ':' + encoded_consumer_secret).toString('base64');
+		this.encoded_consumer_key    = encodeURIComponent(options.consumer_key),
+		this.encoded_consumer_secret = encodeURIComponent(options.consumer_secret),
+		this.encoded_bearer_token     = new Buffer(
+			this.encoded_consumer_key + ':' + this.encoded_consumer_secret
+		).toString('base64');
 
 		var deferred = q.defer();
 
 		request.post("https://api.twitter.com/oauth2/token", {
 			headers: {
 				"User-Agent"     : "Twitter Application-only OAuth App v.1",
-				"Authorization"  : "Basic " + encoded_bearer_token + ""
+				"Authorization"  : "Basic " + this.encoded_bearer_token + ""
 			},
 			form: {
 				'grant_type' : 'client_credentials'
@@ -30,18 +32,14 @@ var BearerToken = {
 		return deferred.promise;
 	},
 
-	invalidate: function(options, bearer_token) {
-		var encoded_consumer_key    = encodeURIComponent(options.consumer_key),
-			encoded_consumer_secret = encodeURIComponent(options.consumer_secret),
-			encoded_bearer_token    = new Buffer(encoded_consumer_key + ':' + encoded_consumer_secret).toString('base64');
-
+	invalidate: function(bearer_token, callback) {
 		var deferred = q.defer();
 
 		request.post("https://api.twitter.com/oauth2/invalidate_token", {
 			headers: {
 				"Host"           : "api.twitter.com",
 				"User-Agent"     : "Twitter Application-only OAuth App v.1",
-				"Authorization"  : "Basic " + encoded_bearer_token,
+				"Authorization"  : "Basic " + this.encoded_bearer_token,
 				"Accept"         : "*/*",
 				"Content-Type"   : "application/x-www-form-urlencoded"
 			},
